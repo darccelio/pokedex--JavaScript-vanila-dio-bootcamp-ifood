@@ -1,7 +1,11 @@
 class Pokemon {
-  number;
+  id;
   name;
   principalType;
   types = [];
   picture;
+  abilities = [];
+  weight;
 }
+
+

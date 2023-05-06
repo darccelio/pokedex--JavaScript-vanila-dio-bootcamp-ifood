@@ -1,9 +1,10 @@
-const pokeApi = {};
+const pokeApi = {}
 
-function convertPokeApiDetailToPokemon(pokeDetail) { //conversão do modelo da api pokemon para o objeto Pokemon
+function convertPokeApiDetailToPokemon(pokeDetail) {
+  //conversão do modelo da api pokemon para o objeto Pokemon
   const pokemon = new Pokemon()
   pokemon.name = pokeDetail.name
-  pokemon.number = pokeDetail.id
+  pokemon.id = pokeDetail.id
   const types = pokeDetail.types.map(typesSlot => typesSlot.type.name)
   const [type] = types //destruturação do objeto, colocando na primeira posição de um array
   pokemon.types = types
@@ -21,12 +22,18 @@ pokeApi.getPokemonDetail = pokemon => {
   )
 }
 
-pokeApi.getPokemons = (offset = 0, limit = 100) => {
-  const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`
+pokeApi.getPokemons = (offset = 0, limit = 100, source) => {
+  const storedPokemonArray = JSON.parse(localStorage.getItem('pokemons')) || [];
+  offset += storedPokemonArray.length;
+  const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
+
+  if (source !== 'click' && storedPokemonArray.length > 0) {
+    return storedPokemonArray
+  }
 
   return (
     fetch(url)
-      .then(res => res.json()) // pega o objeto http response e converte para objeto json
+      .then(response => response.json()) // pega o objeto http response e converte para objeto json
       .then(jsonBody => jsonBody.results) // pega o objeto json e converte em lista de pokemons
       .then(pokemons => pokemons.map(pokeApi.getPokemonDetail)) // através do map, para cada pokemon da lista de pokemons,
       // é enviado por referência um objeto pokemon para o método getPokemonDetail
@@ -37,4 +44,12 @@ pokeApi.getPokemons = (offset = 0, limit = 100) => {
       // obtendo uma lista de detalhes do pokemon em formato de lista
       .then(pokemonsDetails => pokemonsDetails)
   ) // lista de detalhes de pokemon resolvida
+}
+
+pokeApi.getPokemonDetailById = id => {
+  console.log('chamou com id', id);
+  const url = `https://pokeapi.co/api/v2/pokemon/${id}/`
+  return fetch(url)
+    .then(res => res.json())
+    .then(convertPokeApiDetailToPokemon);
 }
