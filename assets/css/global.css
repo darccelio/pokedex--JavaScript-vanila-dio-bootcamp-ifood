@@ -4,7 +4,7 @@
 }
 
 body {
-  background-color: #ggg;
+  background-color: #c6c6c6;
 }
 
 .content {
@@ -12,6 +12,7 @@ body {
   height: 100vh;
   padding: 1rem;
   background-color: #fff;
+  margin: 0 auto;
 }
 
 @media screen and (min-width: 992px) {
@@ -21,6 +22,11 @@ body {
     margin: 1rem auto;
     border-radius: 1rem;
   }
+}
+
+.title {
+  padding: 1rem;
+  margin: 0 auto;
 }
 
 .pagination {
