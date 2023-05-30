@@ -4,8 +4,6 @@ function convertPokeApiDetailToPokemon(pokeDetail) {
   //conversão do modelo da api pokemon para o objeto Pokemon
   const pokemon = new Pokemon()
 
-  console.log('Pokedetail: ', { ...pokeDetail })
-
   pokemon.id = pokeDetail?.id
   pokemon.name = pokeDetail?.name
 
@@ -92,7 +90,6 @@ function convertPokeApiDetailToPokemon(pokeDetail) {
     )
   }
 
-  console.log('Pokemon: ', pokemon)
   return pokemon
 }
 
@@ -143,22 +140,11 @@ pokeApi.getPokemonDetailById = id => {
     })
     .then(pokeDetail => {
       return getFirstLevel(pokeDetail)
-        .then(value => {
-          console.log('Retorno do Fetch: ', value)
-          return Promise.all(value)
-        })
+        .then(value => Promise.all(value))
         .then(obj => {
-          console.log('Objeto Características com elementos duplicados: ', obj)
-
           const filteredData = obj
-            .flatMap(item => {
-              console.log('item ', item)
-              return item
-            })
-            .map(item => {
-              console.log('item?.descriptions ', item)
-              return item?.descriptions
-            })
+            .flatMap(item => item)
+            .map(item => item?.descriptions)
             .flat()
             .filter(desc => desc?.language?.name === 'en')
             .map(desc => desc.description)
@@ -172,10 +158,7 @@ async function getFirstLevel(obj) {
   return await obj.stats.flatMap(item => {
     return fetch(item.stat.url)
       .then(data => data.json())
-      .then(obj => {
-        console.log('Primeiro nível de Promise: ', obj)
-        return getSecondLevel(obj)
-      })
+      .then(obj => getSecondLevel(obj))
       .then(value => Promise.all(value))
       .catch(error => {
         console.error(`Falha ao recuperar JSON de ${item?.stat?.url}`, error)
@@ -186,12 +169,7 @@ async function getFirstLevel(obj) {
 
 async function getSecondLevel(obj) {
   return await obj.characteristics.flatMap(item =>
-    fetch(item.url)
-      .then(res => res.json())
-      .then(value => {
-        console.log('Segundo nível de Promise: ', value)
-        return value
-      })
+    fetch(item.url).then(res => res.json())
   )
 }
 
@@ -214,7 +192,6 @@ pokeApi.getSpecies = obj => {
 
 //   // Adiciona os detalhes de espécie ao objeto de detalhes do Pokémon
 //   pokemonData.speciesDetail = speciesData;
-//   console.log('Data: ', pokemonData);
 
 //   // Retorna o objeto de detalhes do Pokémon com os detalhes de espécie adicionados
 //   return convertPokeApiDetailToPokemon(pokemonData);

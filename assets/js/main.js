@@ -15,7 +15,7 @@ function loadMorePokemon(source) {
     pokemonsResponse.then((pokemons = []) => {
       if (pokemons.length > 0) {
         offset += limit;
-        persisteOnLocalStorage(pokemons);
+        saveToLocalStorage(pokemons);
         pokemonsList.innerHTML += pokemons.map(convertPokemonToListHtml).join('');
       }
     })
@@ -29,7 +29,7 @@ function convertPokemonToListHtml(pokemon) {
 
   let pokemonIdStringFormated
 
-  console.log('Pokemon', pokemon.id);
+  
   if (pokemon.id.toString().length == 1)
     pokemonIdStringFormated = `00${pokemon.id}`
   else if (pokemon.id.toString().length == 2)
@@ -68,22 +68,22 @@ function redirectToPokemonDetail(pokemonId = 1) {
 }
 
 // Função que recebe um array de objetos Pokemon, verifica os objetos distintos e salva no LocalStorage
-function persisteOnLocalStorage(pokemonArray) {
+function saveToLocalStorage(pokemonArray) {
   
   // Verifica se já existe um array de objetos Pokemon no LocalStorage
   const storedPokemonArray =
     JSON.parse(localStorage.getItem('pokemons')) || [];
 
-  // // Itera sobre os objetos Pokemon do array recebido
+    // Itera sobre os objetos Pokemon do array recebido
   // for (let i = 0; i < pokemonArray.length; i++) {
   //   const newPokemon = pokemonArray[i];
   //   let isDistinct = true;
 
-  //   // Itera sobre os objetos Pokemon já armazenados no LocalStorage
+       // Itera sobre os objetos Pokemon já armazenados no LocalStorage
   //   for (let j = 0; j < storedPokemonArray.length; j++) {
   //     const storedPokemon = storedPokemonArray[j];
 
-  //     // Verifica se os objetos Pokemon são iguais
+   // Verifica se os objetos Pokemon são iguais
   //     if (
   //       newpokemon.id === storedpokemon.id &&
   //       newPokemon.name === storedPokemon.name &&
@@ -98,13 +98,13 @@ function persisteOnLocalStorage(pokemonArray) {
   //     };
   //   }
 
-  //   // Se o objeto Pokemon é distinto, adiciona ao array armazenado no LocalStorage
+      // Se o objeto Pokemon é distinto, adiciona ao array armazenado no LocalStorage
   //   if (isDistinct) {
   //     storedPokemonArray.push(newPokemon);
   //   }
   // }
 
-  // // Salva o novo array de objetos Pokemon no LocalStorage
+      // Salva o novo array de objetos Pokemon no LocalStorage
   // localStorage.setItem('pokemons', JSON.stringify(storedPokemonArray))
 
   //refactoração do código acima
